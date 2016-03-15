@@ -66,7 +66,7 @@ public class FactorizationModule extends AbstractModule implements Module {
 		}
 
 		Factorization factorization = new Factorization(ts);
-		boolean result = factorization.factorize();
+		boolean result = factorization.hasFactors();
 		output.setReturnValue("is_product", Boolean.class, result);
 		if (result) {
 			output.setReturnValue("factor1", TransitionSystem.class, factorization.getFactor1());

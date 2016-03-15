@@ -29,9 +29,12 @@ import java.util.Set;
 
 import org.testng.annotations.Test;
 
+import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.apt.analysis.coverability.CoverabilityGraph;
+import uniol.apt.generator.bitnet.SimpleBitNetGenerator;
 import uniol.apt.io.parser.ParserTestUtils;
 
 public class FactorizationTest {
@@ -41,7 +44,7 @@ public class FactorizationTest {
 	public void testFactorize1() {
 		TransitionSystem ts = ParserTestUtils.getAptLTS("nets/crashkurs-cc1-aut.apt");
 		Factorization fact = new Factorization(ts);
-		assertThat(fact.factorize(), equalTo(true));
+		assertThat(fact.hasFactors(), equalTo(true));
 
 		Set<Set<Arc>> factorArcs = new HashSet<>();
 		factorArcs.add(fact.getFactor1().getEdges());
@@ -60,15 +63,39 @@ public class FactorizationTest {
 
 	@Test
 	public void testFactorize2() {
-		TransitionSystem ts1 = new TransitionSystem();
-		State s0 = ts1.createState();
-		State s1 = ts1.createState();
-		ts1.setInitialState(s0);
-		ts1.createArc(s0, s1, "a");
-		ts1.createArc(s1, s0, "b");
+		TransitionSystem ts = new TransitionSystem();
+		State s0 = ts.createState();
+		State s1 = ts.createState();
+		ts.setInitialState(s0);
+		ts.createArc(s0, s1, "a");
+		ts.createArc(s1, s0, "b");
 
-		Factorization fact = new Factorization(ts1);
-		assertThat(fact.factorize(), equalTo(false));
+		Factorization fact = new Factorization(ts);
+		assertThat(fact.hasFactors(), equalTo(false));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFactorize3() {
+		PetriNet pn = new SimpleBitNetGenerator().generateNet(2);
+		TransitionSystem ts = CoverabilityGraph.get(pn).toCoverabilityLTS();
+
+		Factorization fact = new Factorization(ts);
+		assertThat(fact.hasFactors(), equalTo(true));
+
+		Set<Set<Arc>> factorArcs = new HashSet<>();
+		factorArcs.add(fact.getFactor1().getEdges());
+		factorArcs.add(fact.getFactor2().getEdges());
+		assertThat(factorArcs, containsInAnyOrder(
+			containsInAnyOrder(
+					arcThatConnectsVia("s0", "s1", "set0"),
+					arcThatConnectsVia("s1", "s0", "unset0")
+			),
+			containsInAnyOrder(
+					arcThatConnectsVia("s0", "s2", "set1"),
+					arcThatConnectsVia("s2", "s0", "unset1")
+			)
+		));
 	}
 
 }

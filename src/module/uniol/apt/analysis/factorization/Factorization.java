@@ -43,17 +43,20 @@ public class Factorization {
 
 	private final TransitionSystem ts;
 
+	private boolean hasFactors;
 	private TransitionSystem factor1;
 	private TransitionSystem factor2;
 
 	/**
-	 * Creates a new Factorization instance that examines the given TS.
+	 * Creates a new Factorization instance that examines the given TS. The
+	 * factorization is performed during the constructor.
 	 *
 	 * @param ts
 	 *                the transition system to factorize
 	 */
 	public Factorization(TransitionSystem ts) {
 		this.ts = ts;
+		this.hasFactors = factorize();
 	}
 
 	/**
@@ -75,11 +78,20 @@ public class Factorization {
 	}
 
 	/**
+	 * Returns true, if factors of the LTS were found.
+	 *
+	 * @return true, if factorization was successful
+	 */
+	public boolean hasFactors() {
+		return hasFactors;
+	}
+
+	/**
 	 * Tries to factorize the TS and returns if it was possible.
 	 *
 	 * @return true, if a factorization was found
 	 */
-	public boolean factorize() {
+	private boolean factorize() {
 		for (Collection<String> item : PowerSet.powerSet(ts.getAlphabet())) {
 			// Skip trivial solutions.
 			if (item.isEmpty() || item.size() == ts.getAlphabet().size()) {
