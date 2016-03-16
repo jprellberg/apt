@@ -37,9 +37,9 @@ import uniol.apt.analysis.coverability.CoverabilityGraph;
 import uniol.apt.generator.bitnet.SimpleBitNetGenerator;
 import uniol.apt.io.parser.ParserTestUtils;
 
+@SuppressWarnings("unchecked")
 public class FactorizationTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testFactorize1() {
 		TransitionSystem ts = ParserTestUtils.getAptLTS("nets/crashkurs-cc1-aut.apt");
@@ -74,7 +74,6 @@ public class FactorizationTest {
 		assertThat(fact.hasFactors(), equalTo(false));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testFactorize3() {
 		PetriNet pn = new SimpleBitNetGenerator().generateNet(2);
@@ -99,6 +98,5 @@ public class FactorizationTest {
 	}
 
 }
-
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

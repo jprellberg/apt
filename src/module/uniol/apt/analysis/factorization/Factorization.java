@@ -92,13 +92,13 @@ public class Factorization {
 	 * @return true, if a factorization was found
 	 */
 	private boolean factorize() {
-		for (Collection<String> item : PowerSet.powerSet(ts.getAlphabet())) {
+		for (Collection<String> tPrimeCandidate : PowerSet.powerSet(ts.getAlphabet())) {
 			// Skip trivial solutions.
-			if (item.isEmpty() || item.size() == ts.getAlphabet().size()) {
+			if (tPrimeCandidate.isEmpty() || tPrimeCandidate.size() == ts.getAlphabet().size()) {
 				continue;
 			}
-			if (isGdiamAndSeparated(item)) {
-				createFactors(item);
+			if (isGdiamAndSeparated(tPrimeCandidate)) {
+				createFactors(tPrimeCandidate);
 				return true;
 			}
 		}
@@ -110,14 +110,14 @@ public class Factorization {
 	 * set of labels (T') is a T'-separation of the TS and the TS is a
 	 * T'-gdiam.
 	 *
-	 * @param item
+	 * @param tPrime
 	 *                a set of labels
 	 */
-	private void createFactors(Collection<String> item) {
+	private void createFactors(Collection<String> tPrime) {
 		// t1 ∪ t2 = Σ
-		Set<String> t1 = new HashSet<>(item);
+		Set<String> t1 = new HashSet<>(tPrime);
 		Set<String> t2 = new HashSet<>(ts.getAlphabet());
-		t2.removeAll(item);
+		t2.removeAll(tPrime);
 
 		factor1 = createFactor(t1);
 		factor2 = createFactor(t2);
