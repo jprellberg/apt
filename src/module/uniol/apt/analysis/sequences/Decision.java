@@ -37,6 +37,8 @@ public class Decision {
 
 	private boolean partOfLongerSequence;
 
+	private boolean wasStartingPoint;
+
 	public Decision(State state) {
 		this(state, false);
 	}
@@ -47,6 +49,7 @@ public class Decision {
 		this.setLetter = setLetter;
 		this.branchIndex = 0;
 		this.partOfLongerSequence = false;
+		this.wasStartingPoint = false;
 	}
 
 	public State getState() {
@@ -79,6 +82,14 @@ public class Decision {
 
 	public void setPartOfLongerSequence(boolean partOfLongerSequence) {
 		this.partOfLongerSequence = partOfLongerSequence;
+	}
+
+	public boolean wasStartingPoint() {
+		return wasStartingPoint;
+	}
+
+	public void setWasStartingPoint(boolean wasStartingPoint) {
+		this.wasStartingPoint = wasStartingPoint;
 	}
 
 	@Override

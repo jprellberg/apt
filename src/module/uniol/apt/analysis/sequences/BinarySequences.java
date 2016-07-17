@@ -19,10 +19,12 @@
 
 package uniol.apt.analysis.sequences;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
+import uniol.apt.adt.exception.StructureException;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
@@ -36,12 +38,12 @@ public class BinarySequences {
 	private final TransitionSystem ts;
 	private final int iterDepth;
 
-	private final PriorityQueue<Sequence> queue;
+	private final Queue<Sequence> queue;
 
 	public BinarySequences(TransitionSystem ts, int iterDepth) {
 		this.ts = ts;
 		this.iterDepth = iterDepth;
-		this.queue = new PriorityQueue<>();
+		this.queue = new LinkedList<>();
 	}
 
 	public void run() {
@@ -50,7 +52,15 @@ public class BinarySequences {
 			Sequence seq = queue.peek();
 			Decision dec = seq.getLastDecision();
 
-			// TODO iter depth if
+			if (seq.getDecisions().size() - seq.getDepth() > iterDepth) {
+				yield(seq.getDecisions());
+				Sequence newSeq = new Sequence(seq.getDepth() + seq.getDecisions().size(), seq.getA(),
+						seq.getB(), new Decision(dec.getState(), dec.hasSetLetter()));
+				queue.add(newSeq);
+				seq.removeLastDecision();
+				seq.getLastDecision().increaseBranchIndex();
+				continue;
+			}
 
 			if (!dec.hasUnvisitedArcs()) {
 				System.out.println(dec + " has no more unvisited arcs.");
@@ -83,36 +93,52 @@ public class BinarySequences {
 					seq.setA(label);
 					setLetter = true;
 				} else if (seq.getA() != label && seq.getB() == null) {
-					if (containsBadBranch(seq.getDecisions(), label)) {
-						dec.increaseBranchIndex();
-						queue.add(new Sequence(seq.getDepth(), new Decision(dec.getState())));
-						System.out.println("Add to queue (1): " + dec.getState());
-						continue;
-					} else {
+					if (!containsBadBranch(seq.getDecisions(), label)) {
 						System.out.println("Setting letter B = " + label);
 						seq.setB(label);
 						setLetter = true;
+
+					} else if (!wasStartingPoint(dec.getState())) {
+						dec.increaseBranchIndex();
+						Decision newDec = new Decision(dec.getState());
+						setWasStartingPoint(dec.getState(), true);
+						queue.add(new Sequence(seq.getDepth() + seq.getDecisions().size(), newDec));
+						System.out.println("Add to queue (1): " + dec.getState());
+						continue;
 					}
 				}
 
+				dec.increaseBranchIndex();
 				if ((label.equals(seq.getA()) || label.equals(seq.getB()))
 						&& !containsBadBranch(dec, seq.getA(), seq.getB())) {
-					dec.increaseBranchIndex();
 					dec.setPartOfLongerSequence(true);
 					Decision newDec = new Decision(arc.getTarget(), setLetter);
 					seq.getDecisions().add(newDec);
 					System.out.println("Making decision: " + newDec);
 
-					queue.remove(seq);
-					seq.increaseDepth();
-					queue.add(seq);
-				} else {
-					dec.increaseBranchIndex();
-					queue.add(new Sequence(seq.getDepth(), new Decision(dec.getState())));
+//					queue.remove(seq);
+//					seq.increaseDepth();
+//					queue.add(seq);
+				} else if (!wasStartingPoint(dec.getState())) {
+					Decision newDec = new Decision(dec.getState());
+					setWasStartingPoint(dec.getState(), true);
+					queue.add(new Sequence(seq.getDepth() + seq.getDecisions().size(), newDec));
 					System.out.println("Add to queue (2): " + dec.getState());
 				}
 			}
 		}
+	}
+
+	private boolean wasStartingPoint(State state) {
+		try {
+			return (boolean) state.getExtension("wasStartingPoint");
+		} catch (StructureException e) {
+			return false;
+		}
+	}
+
+	private void setWasStartingPoint(State state, boolean val) {
+		state.putExtension("wasStartingPoint", val);
 	}
 
 	private boolean containsBadBranch(Decision decision, String a, String b) {
@@ -142,10 +168,21 @@ public class BinarySequences {
 
 	private void yield(List<Decision> decisions) {
 		String states = "";
-		for (Decision dec : decisions) {
+		String word = "";
+		for (int i = 0; i < decisions.size(); i++) {
+			Decision dec = decisions.get(i);
 			states += dec.getState().getId() + " ";
+
+			if (i < decisions.size() - 1) {
+				Set<Arc> post = dec.getState().getPostsetEdges();
+				for (Arc arc : post) {
+					if (arc.getTarget().equals(decisions.get(i + 1).getState())) {
+						word += arc.getLabel();
+					}
+				}
+			}
 		}
-		System.out.println(">>>>>>>> " + states);
+		System.out.println(">>>>>>>> " + states + " = " + word);
 	}
 
 	public boolean isSolvable() {
@@ -170,23 +207,42 @@ public class BinarySequences {
 		State s1 = ts.createState();
 		State s2 = ts.createState();
 		State s3 = ts.createState();
-		State s4 = ts.createState();
-		State s5 = ts.createState();
-		State s6 = ts.createState();
 
 		ts.setInitialState(s0);
 
-		ts.createArc(s0, s1, "b");
-		ts.createArc(s0, s4, "c");
-		ts.createArc(s0, s6, "a");
-		ts.createArc(s1, s2, "a");
-		ts.createArc(s2, s3, "a");
-		ts.createArc(s4, s5, "d");
-		ts.createArc(s5, s3, "c");
+		ts.createArc(s0, s1, "a");
+		ts.createArc(s1, s2, "b");
+		ts.createArc(s1, s3, "c");
+		ts.createArc(s2, s0, "a");
 
-		BinarySequences bs = new BinarySequences(ts, 10);
+		BinarySequences bs = new BinarySequences(ts, 5);
 		bs.run();
 	}
+
+//	public static void main(String[] args) {
+//		TransitionSystem ts = new TransitionSystem();
+//
+//		State s0 = ts.createState();
+//		State s1 = ts.createState();
+//		State s2 = ts.createState();
+//		State s3 = ts.createState();
+//		State s4 = ts.createState();
+//		State s5 = ts.createState();
+//		State s6 = ts.createState();
+//
+//		ts.setInitialState(s0);
+//
+//		ts.createArc(s0, s1, "b");
+//		ts.createArc(s0, s4, "c");
+//		ts.createArc(s0, s6, "a");
+//		ts.createArc(s1, s2, "a");
+//		ts.createArc(s2, s3, "a");
+//		ts.createArc(s4, s5, "d");
+//		ts.createArc(s5, s3, "c");
+//
+//		BinarySequences bs = new BinarySequences(ts, 10);
+//		bs.run();
+//	}
 
 }
 
