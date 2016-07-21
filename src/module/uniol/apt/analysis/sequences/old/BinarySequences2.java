@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.apt.analysis.sequences;
+package uniol.apt.analysis.sequences.old;
 
 import java.util.ArrayList;
 import java.util.Deque;
