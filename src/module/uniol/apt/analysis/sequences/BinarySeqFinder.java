@@ -65,6 +65,7 @@ public class BinarySeqFinder {
 	 * <pre>
 	 * s0 --a-> s1 --b-> s2
 	 * s0 --a-> s1 --c-> s2
+	 * s0 --c-> s1 --a-> s2
 	 * s3 --a-> s4 --c-> s5
 	 * </pre>
 	 *
