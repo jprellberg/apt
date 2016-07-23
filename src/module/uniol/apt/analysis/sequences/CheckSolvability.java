@@ -72,16 +72,41 @@ public class CheckSolvability {
 		});
 	}
 
-	private Boolean apply(BinarySeqExpression pathExpression) {
-		// Unroll cycles 10 times until a better solution for the check
-		// is found
-		String word = pathExpression.toWord("a", "b", 10);
-		if (binaryWordMatcher.isUnsolvableBinaryWord(word)) {
-			offendingExpression = pathExpression;
+	private Boolean apply(BinarySeqExpression binSeq) {
+		if (isUnsolvableBinarySeq(binSeq)) {
+			offendingExpression = binSeq;
 			return false;
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * Checks if the given {@link BinarySeqExpression} makes the LTS
+	 * unsolvable
+	 *
+	 * @param binSeq
+	 *                binary sequence expression vw*
+	 * @return true if the expression makes the LTS Petri net unsolvable
+	 */
+	private boolean isUnsolvableBinarySeq(BinarySeqExpression binSeq) {
+		// If pattern I is found in a string does not change when
+		// unrolling more than two times.
+		String unrolled2 = binSeq.toWord("a", "b", 2);
+		char[] unrolled2Chars = unrolled2.toCharArray();
+		if (binaryWordMatcher.containsPatternI(unrolled2Chars)
+				|| binaryWordMatcher.containsPatternII(unrolled2Chars)) {
+			return true;
+		}
+
+		/*
+		 * Now only pattern II is left to check but it requires infinite
+		 * unrolling for an exhaustive check. For now just unroll 50
+		 * times. TODO devise a proper scheme to check this exhaustively
+		 */
+		String unrolledInf = binSeq.toWord("a", "b", 50);
+		char[] unrolledInfChars = unrolledInf.toCharArray();
+		return binaryWordMatcher.containsPatternII(unrolledInfChars);
 	}
 
 	/**
