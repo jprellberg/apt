@@ -143,7 +143,7 @@ public class BinarySeqExpression {
 			Arc last = v.get(v.size() - 1);
 			sb.append(last.getTargetId());
 		} else {
-			sb.append("*");
+			sb.append("(");
 		}
 		for (Arc arc : w) {
 			sb.append(arcToSourceLabelString(arc));
@@ -151,6 +151,7 @@ public class BinarySeqExpression {
 		if (!w.isEmpty()) {
 			Arc last = w.get(w.size() - 1);
 			sb.append(last.getTargetId());
+			sb.append(")*");
 		}
 		return sb.toString();
 	}
