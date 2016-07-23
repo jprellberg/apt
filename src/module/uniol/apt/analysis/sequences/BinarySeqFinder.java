@@ -215,8 +215,12 @@ public class BinarySeqFinder {
 				 */
 				binseq = findFromCycleComponent(component);
 			}
-			if (!binseq.isEmpty()) {
-				// Output sequence unless it's empty.
+			/*
+			 * Output sequence unless it's empty or if limitResult
+			 * is set if it is not a single letter word.
+			 */
+			if ((!limitResult && !binseq.isEmpty())
+					|| (limitResult && !binseq.isEmptyOrSingleLetterWord())) {
 				yield(binseq);
 			}
 		}
@@ -269,6 +273,7 @@ public class BinarySeqFinder {
 				v.add(nextArc);
 				currState = nextState;
 			} else {
+				v.add(nextArc);
 				w = followCycle(nextState);
 				return BinarySeqExpression.vw(v, w);
 			}
