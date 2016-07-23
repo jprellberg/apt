@@ -39,7 +39,7 @@ public class BinarySeqExpression {
 	 * = 0.
 	 *
 	 * @param v
-	 *                path
+	 *                path through an LTS
 	 * @return PathExpression of v
 	 */
 	public static BinarySeqExpression v(List<Arc> v) {
@@ -52,7 +52,7 @@ public class BinarySeqExpression {
 	 * = 0.
 	 *
 	 * @param w
-	 *                cycle
+	 *                cycle through an LTS
 	 * @return PathExpression of w*
 	 */
 	public static BinarySeqExpression w(List<Arc> w) {
@@ -66,9 +66,9 @@ public class BinarySeqExpression {
 	 * be returned.
 	 *
 	 * @param v
-	 *                path
+	 *                path through an LTS
 	 * @param w
-	 *                cycle
+	 *                cycle through an LTS
 	 * @return PathExpression of vw*
 	 */
 	public static BinarySeqExpression vw(List<Arc> v, List<Arc> w) {
