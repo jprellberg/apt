@@ -34,10 +34,32 @@ public class CheckSolvability {
 
 	private BinarySeqExpression offendingExpression;
 
+	/**
+	 * Creates a new instance of {@link CheckSolvability} that operates on
+	 * the given transition system. Invoking this constructor starts the
+	 * check process and the results can be retrieved using the other class
+	 * methods.
+	 *
+	 * @param transitionSystem
+	 *                input LTS
+	 */
 	public CheckSolvability(TransitionSystem transitionSystem) {
 		this(transitionSystem, new BinarySeqFinder(), new BinaryWordMatcher());
 	}
 
+	/**
+	 * Creates a new instance of {@link CheckSolvability} that operates on
+	 * the given transition system. Invoking this constructor starts the
+	 * check process and the results can be retrieved using the other class
+	 * methods.
+	 *
+	 * @param transitionSystem
+	 *                input LTS
+	 * @param binarySequenceFinder
+	 *                {@link BinarySeqFinder} dependency
+	 * @param binaryWordMatcher
+	 *                {@link BinaryWordMatcher} dependency
+	 */
 	public CheckSolvability(TransitionSystem transitionSystem, BinarySeqFinder binarySequenceFinder,
 			BinaryWordMatcher binaryWordMatcher) {
 		this.binarySeqFinder = binarySequenceFinder;
@@ -51,7 +73,8 @@ public class CheckSolvability {
 	}
 
 	private Boolean apply(BinarySeqExpression pathExpression) {
-		// Unroll cycles 10 times until a better solution for the check is found
+		// Unroll cycles 10 times until a better solution for the check
+		// is found
 		String word = pathExpression.toWord("a", "b", 10);
 		if (binaryWordMatcher.isUnsolvableBinaryWord(word)) {
 			offendingExpression = pathExpression;
@@ -61,16 +84,43 @@ public class CheckSolvability {
 		}
 	}
 
+	/**
+	 * Returns true if the LTS was found to be Petri net solvable.
+	 */
 	public boolean isSolvable() {
 		return offendingExpression == null;
 	}
 
+	/**
+	 * Returns the regular expression that represents a path through the LTS
+	 * that makes it Petri net unsolvable if {@link #isSolvable()} returned
+	 * false.
+	 *
+	 * @throws IllegalStateException
+	 *                 thrown if the LTS was solvable
+	 */
 	public String getUnsolvableSequenceAsRegex() {
-		return offendingExpression.toRegExpString();
+		if (offendingExpression != null) {
+			return offendingExpression.toRegExpString();
+		} else {
+			throw new IllegalStateException(
+					"The LTS was solvable so there is no offending sequence regular expression.");
+		}
 	}
 
+	/**
+	 * Returns a string representation of a path through the LTS that makes
+	 * it Petri net unsolvable if {@link #isSolvable()} returned false.
+	 *
+	 * @throws IllegalStateException
+	 *                 thrown if the LTS was solvable
+	 */
 	public String getUnsolvableSequenceAsArcs() {
-		return offendingExpression.toStateArcString();
+		if (offendingExpression != null) {
+			return offendingExpression.toStateArcString();
+		} else {
+			throw new IllegalStateException("The LTS was solvable so there is no offending sequence.");
+		}
 	}
 
 }

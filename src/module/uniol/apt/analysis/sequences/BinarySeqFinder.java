@@ -124,6 +124,8 @@ public class BinarySeqFinder {
 				try {
 					String a = alphabet.get(i);
 					String b = alphabet.get(j);
+					// Run will be called for all {a, b}
+					// combinations
 					run(transitionSystem, a, b);
 				} catch (InterruptedException e) {
 					return;
@@ -150,22 +152,70 @@ public class BinarySeqFinder {
 	 */
 	private void run(TransitionSystem transitionSystem, String a, String b) throws InterruptedException {
 		log("Searching LTS limited to {%s, %s}%n", a, b);
+
+		// Copy transition system so we can modify it without affecting
+		// the input
 		TransitionSystem ts = new TransitionSystem(transitionSystem);
+
+		/*
+		 * Modify the LTS to be (S', →, T, ?). S' is S without all
+		 * states that have more than one outgoing {a, b} arc. This is
+		 * because this algorithm looks for binary paths over {a, b} in
+		 * the LTS where any state that is part of the path may not have
+		 * an {a, b} arc to a state that is not part of the path. The
+		 * removed states therefore could not have been part of a path
+		 * anyways. Be aware that S' could possibly not contain s0.
+		 */
 		removeStates(ts, a, b);
+
+		/*
+		 * Modify the LTS to be (S', →', {a, b}, ?). →' is → keeping
+		 * only the arcs labeled with {a, b} that are connected to
+		 * states in S'
+		 */
 		removeArcs(ts, a, b);
 
+		/*
+		 * The modified transition system is now LTS' = (S', →', {a, b},
+		 * ?). Note that s0 may not actually exist in S' anymore but
+		 * this does not matter for the remaining algorithm. LTS'
+		 * contains only paths and cycles because there are no cycles in
+		 * LTS' that contain a branch leaving the cycle. This is because
+		 * LTS' has only labels {a, b} and all states that have more
+		 * than one outgoing arc were removed.
+		 *
+		 * Compute strongly connected components of LTS'. Nodes on a
+		 * path will end up alone in a component while cycles will end
+		 * up in their own components. SSC is a set of sets of nodes.
+		 */
 		Set<? extends Set<State>> ssc = Connectivity.getStronglyConnectedComponents(ts);
+
+		// Find all SSCs that are cycles.
 		Set<Set<State>> sscCycles = findCycleComponents(ssc);
+
+		// Find all SSCs that have no incoming arcs because only maximal
+		// paths are interesting.
 		Set<Set<State>> sscRoots = findRootComponents(ssc);
 
+		// Find paths as regular expressions r = vw* with ¬(|v| = 0 and
+		// |w| = 0) starting from ROOTS
 		for (Set<State> component : sscRoots) {
 			BinarySeqExpression binseq;
 			if (component.size() == 1) {
+				// This component is a single state that is the
+				// starting point of a path.
 				binseq = findFromPathComponent(component, sscCycles);
 			} else {
+				/*
+				 * |C| > 1. This component is a cycle and also
+				 * has no branches to leave it. Pick random
+				 * state from C and follow the path until all
+				 * states have been visited.
+				 */
 				binseq = findFromCycleComponent(component);
 			}
 			if (!binseq.isEmpty()) {
+				// Output sequence unless it's empty.
 				yield(binseq);
 			}
 		}
@@ -264,6 +314,10 @@ public class BinarySeqFinder {
 	}
 
 	/**
+	 * Find all SSCs that are
+	 * <code>ROOTS = { C | C ∈ SSC and ¬∃s ∈ S', t ∈ {a, b}, c ∈ C: (s ∉ C and (s, t, c) ∈ →')}</code>
+	 * .
+	 *
 	 * @param ssc
 	 *                all strongly connected components
 	 * @return a subset of ssc that contains all components that have no
@@ -291,6 +345,9 @@ public class BinarySeqFinder {
 	}
 
 	/**
+	 * Find all SSCs that are
+	 * <code>CYCLES = { C | C ∈ SSC and |C| > 1 }</code>.
+	 *
 	 * @param ssc
 	 *                all strongly connected components
 	 * @return a subset of ssc that contains all components that are cycles
@@ -388,10 +445,13 @@ public class BinarySeqFinder {
 			String key = binseq.toRegExpString("a", "b");
 			isUnique = uniqueSequences.add(key);
 		}
+
 		log("Found sequence %s (%s) (unique=%s)%n",
 				binseq.toRegExpString("a", "b"),
 				binseq.toStateArcString(),
-				isUnique);
+				isUnique
+		);
+
 		if (sequences != null && isUnique) {
 			sequences.add(binseq);
 		}
