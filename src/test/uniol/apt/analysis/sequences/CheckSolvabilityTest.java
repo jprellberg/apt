@@ -27,7 +27,28 @@ import org.testng.annotations.Test;
 
 import uniol.apt.adt.ts.TransitionSystem;
 
+/**
+ * Tests for {@link CheckSolvability}.
+ *
+ * @author Jonas Prellberg
+ */
 public class CheckSolvabilityTest {
+
+	@Test
+	public void testSolvable() {
+		TransitionSystem ts = new TransitionSystem();
+		ts.createState("s0");
+		ts.createState("s1");
+		ts.createState("s2");
+		ts.createState("s6");
+		ts.createArc("s0", "s1", "a");
+		ts.createArc("s1", "s2", "b");
+		ts.createArc("s2", "s1", "a");
+		ts.setInitialState("s0");
+
+		CheckSolvability checkSolvability = new CheckSolvability(ts);
+		assertThat(checkSolvability.isSolvable(), is(equalTo(true)));
+	}
 
 	@Test
 	public void testContainsPatternI() {
