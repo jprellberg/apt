@@ -119,6 +119,7 @@ public class BinarySeqFinder {
 	 *                input transition system
 	 */
 	private void run(TransitionSystem transitionSystem) {
+		uniqueSequences.clear();
 		List<String> alphabet = new ArrayList<>(transitionSystem.getAlphabet());
 		for (int i = 0; i < alphabet.size(); i++) {
 			for (int j = i + 1; j < alphabet.size(); j++) {
@@ -202,18 +203,19 @@ public class BinarySeqFinder {
 		// |w| = 0) starting from ROOTS
 		for (Set<State> component : sscRoots) {
 			BinarySeqExpression binseq;
-			if (component.size() == 1) {
+			if (sscCycles.contains(component)) {
+				/*
+				 * It holds that (|C| > 1) or (|C| = 1 and the
+				 * state in C has a loop). This component is a
+				 * cycle and also has no branches to leave it.
+				 * Pick random state from C and follow the path
+				 * until all states have been visited.
+				 */
+				binseq = findFromCycleComponent(component);
+			} else {
 				// This component is a single state that is the
 				// starting point of a path.
 				binseq = findFromPathComponent(component, sscCycles);
-			} else {
-				/*
-				 * |C| > 1. This component is a cycle and also
-				 * has no branches to leave it. Pick random
-				 * state from C and follow the path until all
-				 * states have been visited.
-				 */
-				binseq = findFromCycleComponent(component);
 			}
 			/*
 			 * Output sequence unless it's empty or if limitResult
@@ -351,8 +353,15 @@ public class BinarySeqFinder {
 	}
 
 	/**
-	 * Find all SSCs that are
-	 * <code>CYCLES = { C | C ∈ SSC and |C| > 1 }</code>.
+	 * Find all SSCs that are cycles. They are the non-path components, i.e.
+	 * <code>|C| > 1</code>, and single-state components that have a loop.
+	 *
+	 * <pre>
+	 * CYCLES = { C | C ∈ SSC and (
+	 * 	|C| > 1 or
+	 * 	∃c ∈ C, t ∈ {a, b}: (c, t, c) ∈ →'
+	 * )}
+	 * </pre>
 	 *
 	 * @param ssc
 	 *                all strongly connected components
@@ -363,6 +372,12 @@ public class BinarySeqFinder {
 		for (Set<State> component : ssc) {
 			if (component.size() > 1) {
 				cycles.add(component);
+			}
+			if (component.size() == 1) {
+				State cState = component.iterator().next();
+				if (cState.getPostsetNodes().contains(cState)) {
+					cycles.add(component);
+				}
 			}
 		}
 		return cycles;
