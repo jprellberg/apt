@@ -41,17 +41,15 @@ public class BinarySeqFinderTest {
 
 	private BinarySeqFinder binarySeqFinder;
 
-	private TransitionSystem tsA;
-	private Arc a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
-
-	private TransitionSystem tsB;
-	private Arc b1, b2, b3, b4;
-
 	@BeforeClass
 	public void before() {
 		binarySeqFinder = new BinarySeqFinder(true);
+	}
 
-		tsA = new TransitionSystem();
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetSequences1() {
+		TransitionSystem tsA = new TransitionSystem();
 		tsA.createState("s0");
 		tsA.createState("s1");
 		tsA.createState("s2");
@@ -61,34 +59,19 @@ public class BinarySeqFinderTest {
 		tsA.createState("s6");
 		tsA.createState("s7");
 		tsA.createState("s8");
-		a1 = tsA.createArc("s0", "s1", "a");
-		a2 = tsA.createArc("s0", "s2", "b");
-		a3 = tsA.createArc("s1", "s3", "b");
-		a4 = tsA.createArc("s1", "s4", "d");
-		a5 = tsA.createArc("s2", "s6", "c");
-		a6 = tsA.createArc("s3", "s5", "b");
-		a7 = tsA.createArc("s4", "s5", "a");
-		a8 = tsA.createArc("s5", "s0", "a");
-		a9 = tsA.createArc("s6", "s7", "d");
-		a10 = tsA.createArc("s7", "s8", "d");
-		a11 = tsA.createArc("s8", "s6", "c");
+		Arc a1 = tsA.createArc("s0", "s1", "a");
+		Arc a2 = tsA.createArc("s0", "s2", "b");
+		Arc a3 = tsA.createArc("s1", "s3", "b");
+		Arc a4 = tsA.createArc("s1", "s4", "d");
+		Arc a5 = tsA.createArc("s2", "s6", "c");
+		Arc a6 = tsA.createArc("s3", "s5", "b");
+		Arc a7 = tsA.createArc("s4", "s5", "a");
+		Arc a8 = tsA.createArc("s5", "s0", "a");
+		Arc a9 = tsA.createArc("s6", "s7", "d");
+		Arc a10 = tsA.createArc("s7", "s8", "d");
+		Arc a11 = tsA.createArc("s8", "s6", "c");
 		tsA.setInitialState("s0");
 
-		tsB = new TransitionSystem();
-		tsB.createState("s0");
-		tsB.createState("s1");
-		tsB.createState("s2");
-		tsB.createState("s3");
-		b1 = tsB.createArc("s0", "s1", "c");
-		b2 = tsB.createArc("s1", "s2", "d");
-		b3 = tsB.createArc("s2", "s3", "d");
-		b4 = tsB.createArc("s3", "s1", "c");
-		tsB.setInitialState("s0");
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testGetSequences1() {
 		List<BinarySeqExpression> seqs = binarySeqFinder.getSequences(tsA);
 		assertThat(seqs, containsInAnyOrder(
 			// s1 b s3 b s5
@@ -108,10 +91,37 @@ public class BinarySeqFinderTest {
 
 	@Test
 	public void testGetSequences2() {
-		List<BinarySeqExpression> seqs = binarySeqFinder.getSequences(tsB);
+		TransitionSystem ts = new TransitionSystem();
+		ts.createState("s0");
+		ts.createState("s1");
+		ts.createState("s2");
+		ts.createState("s3");
+		Arc a1 = ts.createArc("s0", "s1", "c");
+		Arc a2 = ts.createArc("s1", "s2", "d");
+		Arc a3 = ts.createArc("s2", "s3", "d");
+		Arc a4 = ts.createArc("s3", "s1", "c");
+		ts.setInitialState("s0");
+
+		List<BinarySeqExpression> seqs = binarySeqFinder.getSequences(ts);
 		assertThat(seqs, contains(
 			// s0 c (s1 d s2 d s3 c s1)*
-			binSeqMatches(BinarySeqExpression.vw(Arrays.asList(b1), Arrays.asList(b2, b3, b4)))
+			binSeqMatches(BinarySeqExpression.vw(Arrays.asList(a1), Arrays.asList(a2, a3, a4)))
+		));
+	}
+
+	@Test
+	public void testGetSequences3() {
+		TransitionSystem ts = new TransitionSystem();
+		ts.createState("s0");
+		ts.createState("s1");
+		Arc a1 = ts.createArc("s0", "s1", "a");
+		Arc a2 = ts.createArc("s1", "s1", "b");
+		ts.setInitialState("s0");
+
+		List<BinarySeqExpression> seqs = binarySeqFinder.getSequences(ts);
+		assertThat(seqs, contains(
+			// s0 a (s1 b s1)*
+			binSeqMatches(BinarySeqExpression.vw(Arrays.asList(a1), Arrays.asList(a2)))
 		));
 	}
 
