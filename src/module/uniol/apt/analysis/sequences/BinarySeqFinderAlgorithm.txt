@@ -1,0 +1,54 @@
+// This algorithm enumerates all longest binary sequences in a LTS
+Input: LTS = (S, →, T, s0)
+
+// B is a set of label pairs disregarding order
+B = {{a, b} | (a, b) ∈ T × T and a ≠ b}
+
+for {a, b} ∈ B:
+    // Modify LTS so that only the interesting parts remain.
+    
+    // S' is S without all states that have more than one outgoing {a, b} arc. This is because this algorithm looks for binary paths over {a, b} in the LTS where any state that is part of the path may not have an {a, b} arc to a state that is not part of the path. The removed states therefore could not have been part of a path anyways. Be aware that S' could possibly not contain s0.
+    S' = { s | ∃s' ∈ S: |{(s, a, s') ∈ →} ∪ {(s, b, s') ∈ →}| ≤ 1 }
+    
+    // →' is → keeping only the arcs labeled with {a, b} that are connected to states in S'
+    →' = { (s, t, s') ∈ → | s ∈ S' and s' ∈ S' and (t = a or t = b) }
+    
+    // The modified transition system is now LTS' = (S', →', {a, b}, s0). Note that s0 may not actually exist in S' anymore but this does not matter for the remaining algorithm. LTS' contains only paths and cycles because there are no cycles in LTS' that contain a branch leaving the cycle. This is because LTS' has only labels {a, b} and all states that have more than one outgoing arc were removed.
+    
+    // Compute strongly connected components of LTS'. Nodes on a path will end up alone in a component while cycles will end up in their own components. SSC is a set of sets of nodes.
+    SSC = getStronglyConnectedComponents(LTS')
+
+    // Find all SSCs that are cycles. They are the non-path components (|C| > 1) and single-state components that have a loop.
+    CYCLES = { C | C ∈ SSC and (|C| > 1 or ∃c ∈ C, t ∈ {a, b}: (c, t, c) ∈ →') }
+    
+    // Find all SSCs that have no incoming arcs from outside the component itself because only maximal paths are interesting.
+    ROOTS = { C | C ∈ SSC and ¬∃s ∈ S', t ∈ {a, b}, c ∈ C: (s ∉ C and (s, t, c) ∈ →')}
+    
+    // Find paths as regular expressions r = vw* with ¬(|v| = 0 and |w| = 0) starting from ROOTS
+    for C ∈ ROOTS:
+        if C ∈ CYCLES:
+            // |C| > 1 or (|C| = 1 and the state in C has a loop). This component is a cycle and also has no branches to leave it. Pick random state from C and follow the path until all states have been visited.
+            w = c0, ..., c_n | c0 ∈ C and ∀i ∈ ℕ ∩ [0, |C|): ∃t ∈ {a, b}: (c_i, t, c_i+1) ∈ →'
+            // The resulting path can be concatenated without limit
+            yield regular rexpression w*
+        else:
+            // This component is a single state that is the starting point of a path.
+            curr ← c0 | c0 ∈ C
+            path ← curr
+            // While an outgoing arc is found...
+            while ∃next ∈ S', t ∈ {a, b}: (curr, t, next) ∈ →':
+                CNEXT = { D | D ∈ SSC and next ∈ D }
+                if CNEXT ⊄ CYCLES:
+                    // If the reached state is not part of a cycle SSC add it to the path
+                    path ← path, next
+                    curr ← next
+                else:
+                    // If the reached state is part of a cycle SSC the first part (v) of the regular expression has been found
+                    v = path
+                    // Same as below...
+                    w = c0, ..., c_n | c0 = next and ∀i ∈ ℕ ∩ [0, |CNEXT|): ∃t ∈ {a, b}: (c_i, t, c_i+1) ∈ →'
+                    yield regular rexpression vw*
+                    continue outer for loop
+            // If control flow reaches this position the path did not end in a cycle
+            v = path
+            yield regular expression v
