@@ -31,6 +31,7 @@ public class CheckSolvability {
 
 	private final BinarySeqFinder binarySeqFinder;
 	private final BinaryWordMatcher binaryWordMatcher;
+	private final int unrollDepth;
 
 	private BinarySeqExpression offendingExpression;
 
@@ -42,9 +43,17 @@ public class CheckSolvability {
 	 *
 	 * @param transitionSystem
 	 *                input LTS
+	 * @param unrollDepth
+	 *                Determines how many times cycles should be unrolled
+	 *                for pattern matching. Independently from this setting
+	 *                at least two unrolls will be performed to check cases
+	 *                that can be checked exhaustively. For a completely
+	 *                exhaustive check an infinite number of unrolls would
+	 *                have to be performed so this setting determines how
+	 *                thorough the check is. Must be at least 2.
 	 */
-	public CheckSolvability(TransitionSystem transitionSystem) {
-		this(transitionSystem, new BinarySeqFinder(), new BinaryWordMatcher());
+	public CheckSolvability(TransitionSystem transitionSystem, int unrollDepth) {
+		this(transitionSystem, unrollDepth, new BinarySeqFinder(), new BinaryWordMatcher());
 	}
 
 	/**
@@ -55,15 +64,27 @@ public class CheckSolvability {
 	 *
 	 * @param transitionSystem
 	 *                input LTS
+	 * @param unrollDepth
+	 *                Determines how many times cycles should be unrolled
+	 *                for pattern matching. Independently from this setting
+	 *                at least two unrolls will be performed to check cases
+	 *                that can be checked exhaustively. For a completely
+	 *                exhaustive check an infinite number of unrolls would
+	 *                have to be performed so this setting determines how
+	 *                thorough the check is. Must be at least 2.
 	 * @param binarySequenceFinder
 	 *                {@link BinarySeqFinder} dependency
 	 * @param binaryWordMatcher
 	 *                {@link BinaryWordMatcher} dependency
 	 */
-	public CheckSolvability(TransitionSystem transitionSystem, BinarySeqFinder binarySequenceFinder,
-			BinaryWordMatcher binaryWordMatcher) {
+	public CheckSolvability(TransitionSystem transitionSystem, int unrollDepth,
+			BinarySeqFinder binarySequenceFinder, BinaryWordMatcher binaryWordMatcher) {
+		if (unrollDepth < 2) {
+			throw new IllegalArgumentException("maxCycleUnrollDepth must not be smaller than 2.");
+		}
 		this.binarySeqFinder = binarySequenceFinder;
 		this.binaryWordMatcher = binaryWordMatcher;
+		this.unrollDepth = unrollDepth;
 		this.binarySeqFinder.getSequences(transitionSystem, new Function<BinarySeqExpression, Boolean>() {
 			@Override
 			public Boolean apply(BinarySeqExpression t) {
@@ -101,10 +122,13 @@ public class CheckSolvability {
 
 		/*
 		 * Now only pattern II is left to check but it requires infinite
-		 * unrolling for an exhaustive check. For now just unroll 50
-		 * times. TODO devise a proper scheme to check this exhaustively
+		 * unrolling for an exhaustive check. Approximate by unrolling a
+		 * couple of times. TODO Devise a proper scheme to check this
+		 * exhaustively? Although that may not be desirable as it could
+		 * take considerable time to check and invalidate the whole
+		 * reason for doing this solvability check.
 		 */
-		String unrolledInf = binSeq.toWord("a", "b", 50);
+		String unrolledInf = binSeq.toWord("a", "b", unrollDepth);
 		char[] unrolledInfChars = unrolledInf.toCharArray();
 		return binaryWordMatcher.containsPatternII(unrolledInfChars);
 	}

@@ -46,7 +46,7 @@ public class CheckSolvabilityTest {
 		ts.createArc("s2", "s1", "a");
 		ts.setInitialState("s0");
 
-		CheckSolvability checkSolvability = new CheckSolvability(ts);
+		CheckSolvability checkSolvability = new CheckSolvability(ts, 10);
 		assertThat(checkSolvability.isSolvable(), is(equalTo(true)));
 	}
 
@@ -72,7 +72,7 @@ public class CheckSolvabilityTest {
 		// Path regex is abbb(bba)*. When unrolled two times it matches
 		// pattern I.
 
-		CheckSolvability checkSolvability = new CheckSolvability(ts);
+		CheckSolvability checkSolvability = new CheckSolvability(ts, 10);
 		assertThat(checkSolvability.isSolvable(), is(equalTo(false)));
 		assertThat(checkSolvability.getUnsolvableSequenceAsRegex(), is(equalTo("abbb(bba)*")));
 	}
@@ -103,7 +103,7 @@ public class CheckSolvabilityTest {
 		// Path regex is cdccccdc(c)*. When unrolled 5 times it matches
 		// pattern II.
 
-		CheckSolvability checkSolvability = new CheckSolvability(ts);
+		CheckSolvability checkSolvability = new CheckSolvability(ts, 10);
 		assertThat(checkSolvability.isSolvable(), is(equalTo(false)));
 		assertThat(checkSolvability.getUnsolvableSequenceAsRegex(), is(equalTo("cdccccdc(c)*")));
 	}

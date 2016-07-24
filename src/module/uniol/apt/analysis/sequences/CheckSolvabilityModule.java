@@ -39,6 +39,8 @@ import uniol.apt.module.exception.ModuleException;
 @AptModule
 public class CheckSolvabilityModule extends AbstractModule implements Module {
 
+	private static final int DEFAULT_UNROLL_DEPTH = 50;
+
 	@Override
 	public String getName() {
 		return "checksolvability";
@@ -47,6 +49,12 @@ public class CheckSolvabilityModule extends AbstractModule implements Module {
 	@Override
 	public void require(ModuleInputSpec inputSpec) {
 		inputSpec.addParameter("lts", TransitionSystem.class, "The LTS that should be examined");
+		inputSpec.addOptionalParameterWithDefault("unrollDepth",
+			Integer.class,
+			DEFAULT_UNROLL_DEPTH,
+			String.valueOf(DEFAULT_UNROLL_DEPTH),
+			"Amount of cycle unrolls that will be performed before pattern matching."
+		);
 	}
 
 	@Override
@@ -59,8 +67,9 @@ public class CheckSolvabilityModule extends AbstractModule implements Module {
 	@Override
 	public void run(ModuleInput input, ModuleOutput output) throws ModuleException {
 		TransitionSystem ts = input.getParameter("lts", TransitionSystem.class);
+		Integer unrollDepth = input.getParameter("unrollDepth", Integer.class);
 
-		CheckSolvability checker = new CheckSolvability(ts);
+		CheckSolvability checker = new CheckSolvability(ts, unrollDepth);
 
 		output.setReturnValue("solvable", Boolean.class, checker.isSolvable());
 		if (!checker.isSolvable()) {
@@ -75,6 +84,19 @@ public class CheckSolvabilityModule extends AbstractModule implements Module {
 	@Override
 	public String getShortDescription() {
 		return "Check if any subword of the LTS is PN unsolvable";
+	}
+
+	@Override
+	public String getLongDescription() {
+		return "Searches for binary sequences in the LTS that make the LTS Petri net unsolvable. "
+			+ "The considered binary sequences are always of the form vw* with the possiblity "
+			+ "of v=empty or w=empty but not both. To decide if a sequence makes the LTS unsolvable "
+			+ "patten matching is used. In order to do the matching some sequences with a "
+			+ "non-empty w must be unrolled. The optional parameter allows to configure "
+			+ "how many unrolls will be performed before matching. Independently from that "
+			+ "setting at least two unrolls will be performed to check cases that can be checked "
+			+ "exhaustively. For a completely exhaustive check an infinite number of unrolls "
+			+ "would have to be performed so the setting determines how thorough the check is.";
 	}
 
 	@Override
