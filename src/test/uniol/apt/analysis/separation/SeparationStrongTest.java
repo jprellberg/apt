@@ -45,20 +45,12 @@ public class SeparationStrongTest {
 	}
 
 	private boolean testNetStrongly(PetriNet pn, int k) {
-		// up to length 6 because there are test nets with finite fire sequences with length 6
-		Separation sep = null;
 		try {
-			sep = new Separation(pn, true, k, 6, false);
+			// up to length 6 because there are test nets with finite fire sequences with length 6
+			return new Separation(pn, true, k, 6, false).isSeparable();
 		} catch (UnboundedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-
-		if (sep == null) {
-			return false;
-		}
-
-		return sep.isSeparable();
 	}
 
 	@Test

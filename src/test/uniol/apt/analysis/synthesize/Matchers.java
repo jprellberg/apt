@@ -53,7 +53,8 @@ public class Matchers extends org.hamcrest.Matchers {
 	}
 
 	public static Matcher<Region> impureRegionWithWeight(String event, int backward, int forward) {
-		return impureRegionWithWeightThat(event, equalTo(BigInteger.valueOf(backward)), equalTo(BigInteger.valueOf(forward)));
+		return impureRegionWithWeightThat(event, equalTo(BigInteger.valueOf(backward)),
+				equalTo(BigInteger.valueOf(forward)));
 	}
 
 	public static Matcher<Region> pureRegionWithWeight(String event, int weight) {
