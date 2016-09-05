@@ -27,16 +27,28 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation marking {@link ReturnValueTransformation} implementations.
+ *
  * @author Uli Schlachter
+ * @author Jonas Prellberg
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface AptReturnValueTransformation {
+
 	/**
 	 * @return The type of parameters that is supported.
 	 */
 	Class<?>[] value();
+
+	/**
+	 * Marks {@link ReturnValueTransformation} implementations that
+	 * transform parameter values typically saved in files. This value will
+	 * be detected by calling code to decide if an optional output filename
+	 * for this return value will be accepted.
+	 */
+	boolean fileDestination() default false;
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

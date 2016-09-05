@@ -35,7 +35,7 @@ import uniol.apt.module.exception.ModuleException;
  * @author Vincent Göbel
  *
  */
-@AptReturnValueTransformation(TransitionSystem.class)
+@AptReturnValueTransformation(value = TransitionSystem.class, fileDestination = true)
 public class TSReturnValueTransformation implements ReturnValueTransformation<TransitionSystem> {
 
 	@Override

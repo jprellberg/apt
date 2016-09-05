@@ -135,7 +135,7 @@ public class APT {
 		List<Parameter> allParameters = ModuleUtils.getAllParameters(module);
 
 		List<ReturnValue> returnValues = ModuleUtils.getReturnValues(module);
-		List<ReturnValue> fileReturnValues = ModuleUtils.getFileReturnValues(module);
+		List<ReturnValue> fileReturnValues = UIUtils.getModuleFileReturnValues(module);
 
 		String[] moduleArgs = PARAMETERS_PARSER.getModuleArguments(moduleName);
 
@@ -223,13 +223,19 @@ public class APT {
 						continue;
 					}
 
-					String returnValueName = returnValues.get(i).getName();
+					boolean isRawReturnValue, isFileReturnValue;
 
-					boolean isRawReturnValue =
-						returnValues.get(i).hasProperty(ModuleOutputSpec.PROPERTY_RAW);
-
-					boolean isFileReturnValue =
-						returnValues.get(i).hasProperty(ModuleOutputSpec.PROPERTY_FILE);
+					// Check annotation for `fileDestination = true` to determine if the return
+					// value should be allowed to be written to a file
+					if (fileReturnValues.contains(returnValues.get(i))) {
+						isRawReturnValue = true;
+						isFileReturnValue = true;
+					} else {
+						isRawReturnValue = returnValues.get(i)
+								.hasProperty(ModuleOutputSpec.PROPERTY_RAW);
+						isFileReturnValue = returnValues.get(i)
+								.hasProperty(ModuleOutputSpec.PROPERTY_FILE);
+					}
 
 					// Print the return value to file without its name
 					if (isFileReturnValue) {

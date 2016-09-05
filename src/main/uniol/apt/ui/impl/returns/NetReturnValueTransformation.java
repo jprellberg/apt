@@ -35,7 +35,7 @@ import uniol.apt.module.exception.ModuleException;
  * @author Vincent Göbel
  *
  */
-@AptReturnValueTransformation(PetriNet.class)
+@AptReturnValueTransformation(value = PetriNet.class, fileDestination = true)
 public class NetReturnValueTransformation implements ReturnValueTransformation<PetriNet> {
 
 	@Override

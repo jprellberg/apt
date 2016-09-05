@@ -52,10 +52,8 @@ public class FactorizationModule extends AbstractModule implements Module {
 	@Override
 	public void provide(ModuleOutputSpec outputSpec) {
 		outputSpec.addReturnValue("is_product", Boolean.class, ModuleOutputSpec.PROPERTY_SUCCESS);
-		outputSpec.addReturnValue("factor1", TransitionSystem.class, ModuleOutputSpec.PROPERTY_RAW,
-				ModuleOutputSpec.PROPERTY_FILE);
-		outputSpec.addReturnValue("factor2", TransitionSystem.class, ModuleOutputSpec.PROPERTY_RAW,
-				ModuleOutputSpec.PROPERTY_FILE);
+		outputSpec.addReturnValue("factor1", TransitionSystem.class);
+		outputSpec.addReturnValue("factor2", TransitionSystem.class);
 	}
 
 	@Override

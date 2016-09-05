@@ -19,18 +19,22 @@
 
 package uniol.apt.ui.impl;
 
+import static org.apache.commons.collections4.ListUtils.union;
+
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
 import uniol.apt.module.Module;
+import uniol.apt.module.ModuleOutputSpec;
 import uniol.apt.module.exception.NoSuchTransformationException;
 import uniol.apt.module.impl.ModuleUtils;
 import uniol.apt.module.impl.OptionalParameter;
 import uniol.apt.module.impl.Parameter;
 import uniol.apt.module.impl.ReturnValue;
+import uniol.apt.ui.AptReturnValueTransformation;
 import uniol.apt.ui.ParametersTransformer;
-
-import static org.apache.commons.collections4.ListUtils.union;
+import uniol.apt.ui.ReturnValueTransformation;
 
 /**
  * Some utility methods to simplify work with the module system.
@@ -59,7 +63,7 @@ public class UIUtils {
 			throws NoSuchTransformationException {
 		List<Parameter> parameters = ModuleUtils.getParameters(module);
 		List<OptionalParameter<?>> optionalParameters = ModuleUtils.getOptionalParameters(module);
-		List<ReturnValue> fileReturnValues = ModuleUtils.getFileReturnValues(module);
+		List<ReturnValue> fileReturnValues = getModuleFileReturnValues(module);
 
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb);
@@ -109,6 +113,28 @@ public class UIUtils {
 		formatter.close();
 		return sb.toString();
 	}
+
+	public static boolean isFileReturnValue(ReturnValue retVal) {
+		ReturnValueTransformation<?> transform = AptReturnValuesTransformer.INSTANCE
+				.getTransformation(retVal.getKlass());
+		if (transform == null) {
+			return false;
+		}
+		AptReturnValueTransformation annotation = transform.getClass()
+				.getAnnotation(AptReturnValueTransformation.class);
+		return annotation.fileDestination() || retVal.hasProperty(ModuleOutputSpec.PROPERTY_FILE);
+	}
+
+	public static List<ReturnValue> getModuleFileReturnValues(Module module) {
+		List<ReturnValue> result = new ArrayList<>();
+		for (ReturnValue retVal : ModuleUtils.getReturnValues(module)) {
+			if (isFileReturnValue(retVal)) {
+				result.add(retVal);
+			}
+		}
+		return result;
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120
