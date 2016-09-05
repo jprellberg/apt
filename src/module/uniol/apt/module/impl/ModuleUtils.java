@@ -19,7 +19,6 @@
 
 package uniol.apt.module.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -92,27 +91,6 @@ public class ModuleUtils {
 		ModuleOutputSpecImpl outputSpec = new ModuleOutputSpecImpl();
 		module.provide(outputSpec);
 		return outputSpec.getReturnValues();
-	}
-
-	/**
-	 * Returns a list of return values with the file property that the
-	 * module will provide after execution.
-	 *
-	 * @param module
-	 *                module in question
-	 * @return list of return values
-	 */
-	public static List<ReturnValue> getFileReturnValues(Module module) {
-		List<ReturnValue> returnValues = getReturnValues(module);
-		List<ReturnValue> fileReturnValues = new ArrayList<>();
-
-		for (ReturnValue returnValue : returnValues) {
-			if (returnValue.hasProperty(ModuleOutputSpec.PROPERTY_FILE)) {
-				fileReturnValues.add(returnValue);
-			}
-		}
-
-		return fileReturnValues;
 	}
 
 	public static ModuleInputImpl getModuleInput(Module module) {
