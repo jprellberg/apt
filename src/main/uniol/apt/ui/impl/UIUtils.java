@@ -114,6 +114,10 @@ public class UIUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * Returns true if the given return value may be written to a file. This
+	 * is determined by checking for the file property and type annotations.
+	 */
 	public static boolean isFileReturnValue(ReturnValue retVal) {
 		ReturnValueTransformation<?> transform = AptReturnValuesTransformer.INSTANCE
 				.getTransformation(retVal.getKlass());
@@ -125,6 +129,13 @@ public class UIUtils {
 		return annotation.fileDestination() || retVal.hasProperty(ModuleOutputSpec.PROPERTY_FILE);
 	}
 
+	/**
+	 * Returns a list of all return values that may be written to a file.
+	 *
+	 * @param module
+	 *                module in question
+	 * @return list of return values with file property or type annotation
+	 */
 	public static List<ReturnValue> getModuleFileReturnValues(Module module) {
 		List<ReturnValue> result = new ArrayList<>();
 		for (ReturnValue retVal : ModuleUtils.getReturnValues(module)) {
