@@ -19,6 +19,10 @@
 
 package uniol.apt.module;
 
+import uniol.apt.module.exception.ModuleException;
+import uniol.apt.module.exception.ModuleInterruptedException;
+import uniol.apt.module.interrupt.ThreadStatusModuleInterrupter;
+
 /**
  * Abstract implementation of the {@link Module} interface.
  *
@@ -48,6 +52,20 @@ public abstract class AbstractModule implements Module {
 	public Category[] getCategories() {
 		return new Category[]{Category.getDefault()};
 	}
+
+	@Override
+	public void run(ModuleInput input, ModuleOutput output) throws ModuleException {
+		run(input, output, new ThreadStatusModuleInterrupter());
+	}
+
+	@Override
+	public void run(ModuleInput input, ModuleOutput output, ModuleInterrupter interrupter)
+			throws ModuleException, ModuleInterruptedException {
+		// TODO remove this method implementation from this class once
+		// all modules have implemented this new interface method
+		run(input, output);
+	}
+
 }
 
 // vim: ft=java:noet:sw=8:sts=8:ts=8:tw=120

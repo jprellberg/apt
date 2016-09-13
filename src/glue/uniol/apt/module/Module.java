@@ -20,6 +20,7 @@
 package uniol.apt.module;
 
 import uniol.apt.module.exception.ModuleException;
+import uniol.apt.module.exception.ModuleInterruptedException;
 
 /**
  * A module.
@@ -86,6 +87,43 @@ public interface Module {
 	 * @throws ModuleException On various kinds of errors that prevent the module from working.
 	 */
 	public void run(ModuleInput input, ModuleOutput output) throws ModuleException;
+
+	/**
+	 * Perform some computation in an interruptible manner on the values
+	 * stored in the {@link ModuleInput} object and store the results in the
+	 * {@link ModuleOutput} object.
+	 *
+	 * To retrieve values from {@link ModuleInput} object the
+	 * {@link ModuleInput#getParameter(String, Class)} method can be used.
+	 *
+	 * To store values in the {@link ModuleOutput} object the
+	 * {@link ModuleOutput#setReturnValue(String, Class, Object)} method can
+	 * be used.
+	 *
+	 * The possible values in both the {@link ModuleInput} and
+	 * {@link ModuleOutput} object are determined entirely by the
+	 * specifications in the {@link #require(ModuleInputSpec)} and
+	 * {@link #provide(ModuleOutputSpec)} method respectively.
+	 *
+	 * @param input
+	 *                storage of the inputs
+	 * @param output
+	 *                storage of the outputs
+	 * @param interrupter
+	 *                callback that will be periodically checked and decides
+	 *                if the module should prematurely abort with an
+	 *                InterruptedException
+	 * @see uniol.apt.module.impl.ExampleModule#run(ModuleInput,
+	 *      ModuleOutput) for an example implementation
+	 * @throws ModuleException
+	 *                 On various kinds of errors that prevent the module
+	 *                 from working.
+	 * @throws ModuleInterruptedException
+	 *                 thrown when the module is interrupted before
+	 *                 completion
+	 */
+	public void run(ModuleInput input, ModuleOutput output, ModuleInterrupter interrupter)
+			throws ModuleException, ModuleInterruptedException;
 
 	/**
 	 * Returns the title of the module.
