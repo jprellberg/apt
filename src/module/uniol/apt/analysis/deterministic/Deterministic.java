@@ -25,6 +25,7 @@ import java.util.Set;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
+import uniol.apt.module.ModuleInterrupter;
 
 /**
  * Check if a labeled transition system is deterministic.
@@ -34,6 +35,7 @@ import uniol.apt.adt.ts.TransitionSystem;
  */
 public class Deterministic {
 
+	private final ModuleInterrupter interrupter;
 	private final TransitionSystem ts;
 	private boolean deterministic = false;
 	private String label = null;
@@ -47,7 +49,21 @@ public class Deterministic {
 	 *                transition system to check
 	 */
 	public Deterministic(TransitionSystem ts) {
+		this(ts, null);
+	}
+
+	/**
+	 * Creates a new {@link Deterministic} instance that operates on the
+	 * given transition system.
+	 *
+	 * @param ts
+	 *                transition system to check
+	 * @param interrupter
+	 *                module interrupter callback
+	 */
+	public Deterministic(TransitionSystem ts, ModuleInterrupter interrupter) {
 		this.ts = ts;
+		this.interrupter = interrupter;
 		check();
 	}
 
@@ -96,6 +112,10 @@ public class Deterministic {
 		Set<StateNameWithLabel> statesLabels = new HashSet<StateNameWithLabel>();
 
 		for (Arc arc : ts.getEdges()) {
+			if (interrupter != null) {
+				interrupter.throwIfInterruptRequested();
+			}
+
 			StateNameWithLabel stateLabel = new StateNameWithLabel(arc.getSourceId(), arc.getLabel());
 
 			if (statesLabels.contains(stateLabel)) {

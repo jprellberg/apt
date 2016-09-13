@@ -27,9 +27,11 @@ import uniol.apt.module.Category;
 import uniol.apt.module.Module;
 import uniol.apt.module.ModuleInput;
 import uniol.apt.module.ModuleInputSpec;
+import uniol.apt.module.ModuleInterrupter;
 import uniol.apt.module.ModuleOutput;
 import uniol.apt.module.ModuleOutputSpec;
 import uniol.apt.module.exception.ModuleException;
+import uniol.apt.module.exception.ModuleInterruptedException;
 
 /**
  * @author Renke Grunwald
@@ -57,10 +59,11 @@ public class DeterministicModule extends AbstractModule implements Module {
 	}
 
 	@Override
-	public void run(ModuleInput input, ModuleOutput output) throws ModuleException {
+	public void run(ModuleInput input, ModuleOutput output, ModuleInterrupter interrupter)
+			throws ModuleException, ModuleInterruptedException {
 		TransitionSystem ts = input.getParameter("lts", TransitionSystem.class);
 
-		Deterministic deterministic = new Deterministic(ts);
+		Deterministic deterministic = new Deterministic(ts, interrupter);
 
 		output.setReturnValue("deterministic", Boolean.class, deterministic.isDeterministic());
 		output.setReturnValue("state", State.class, deterministic.getNode());
