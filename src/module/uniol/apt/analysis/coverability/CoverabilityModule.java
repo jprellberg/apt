@@ -29,9 +29,11 @@ import uniol.apt.module.Category;
 import uniol.apt.module.Module;
 import uniol.apt.module.ModuleInput;
 import uniol.apt.module.ModuleInputSpec;
+import uniol.apt.module.ModuleInterrupter;
 import uniol.apt.module.ModuleOutput;
 import uniol.apt.module.ModuleOutputSpec;
 import uniol.apt.module.exception.ModuleException;
+import uniol.apt.module.exception.ModuleInterruptedException;
 
 /**
  * Provide the coverability graph as a module.
@@ -67,16 +69,18 @@ public class CoverabilityModule extends AbstractModule implements Module {
 	 * @param pn The Petri net to look at
 	 * @return The coverability graph.
 	 */
-	protected CoverabilityGraph getGraph(PetriNet pn) {
-		return CoverabilityGraph.get(pn);
+	protected CoverabilityGraph getGraph(PetriNet pn, ModuleInterrupter interrupter) {
+		return CoverabilityGraph.get(pn, interrupter);
 	}
 
 	@Override
-	public void run(ModuleInput input, ModuleOutput output) throws ModuleException {
+	public void run(ModuleInput input, ModuleOutput output, ModuleInterrupter interrupter)
+			throws ModuleException, ModuleInterruptedException {
 		PetriNet pn = input.getParameter("pn", PetriNet.class);
-		TransitionSystem result = getGraph(pn).toCoverabilityLTS();
+		TransitionSystem result = getGraph(pn, interrupter).toCoverabilityLTS();
 		boolean isReachability = true;
 		for (State node : result.getNodes()) {
+			interrupter.throwIfInterruptRequested();
 			CoverabilityGraphNode coverNode =
 				(CoverabilityGraphNode) node.getExtension(CoverabilityGraphNode.class.getName());
 			if (coverNode.getMarking().hasOmega()) {

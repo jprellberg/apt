@@ -22,6 +22,7 @@ package uniol.apt.analysis.coverability;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.module.AptModule;
 import uniol.apt.module.Module;
+import uniol.apt.module.ModuleInterrupter;
 
 /**
  * Provide the coverability graph as a module.
@@ -41,8 +42,8 @@ public class ReachabilityModule extends CoverabilityModule implements Module {
 	}
 
 	@Override
-	protected CoverabilityGraph getGraph(PetriNet pn) {
-		return CoverabilityGraph.getReachabilityGraph(pn);
+	protected CoverabilityGraph getGraph(PetriNet pn, ModuleInterrupter interrupter) {
+		return CoverabilityGraph.getReachabilityGraph(pn, interrupter);
 	}
 }
 

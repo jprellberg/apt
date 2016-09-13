@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 
 import uniol.apt.adt.StructuralExtensionRemover;
+import uniol.apt.adt.exception.ArcExistsException;
+import uniol.apt.adt.exception.StructureException;
 import uniol.apt.adt.extension.ExtensionProperty;
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.Marking;
@@ -37,11 +39,9 @@ import uniol.apt.adt.pn.Transition;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.apt.util.Pair;
-
-import uniol.apt.adt.exception.ArcExistsException;
-import uniol.apt.adt.exception.StructureException;
 import uniol.apt.analysis.exception.UnboundedException;
+import uniol.apt.module.ModuleInterrupter;
+import uniol.apt.util.Pair;
 
 /**
  * This class represents a coverability graph of a Petri net. Let's first define the reachability graph: The reachable
@@ -54,6 +54,7 @@ import uniol.apt.analysis.exception.UnboundedException;
  */
 public class CoverabilityGraph {
 
+	private final ModuleInterrupter interrupter;
 	// The Petri net that we are handling
 	private final PetriNet pn;
 	// Map from visited markings to the corresponding nodes
@@ -72,7 +73,18 @@ public class CoverabilityGraph {
 	 * @return A coverability graph.
 	 */
 	static public CoverabilityGraph get(PetriNet pn) {
-		return get(pn, false);
+		return get(pn, false, null);
+	}
+
+	/**
+	 * Construct the coverability graph for a given Petri net. If a coverability graph for this Petri net is already
+	 * known, that instance is re-used instead of creating a new one.
+	 * @param pn The Petri net whose coverability graph is wanted.
+	 * @param interrupter callback for module interruptions
+	 * @return A coverability graph.
+	 */
+	static public CoverabilityGraph get(PetriNet pn, ModuleInterrupter interrupter) {
+		return get(pn, false, interrupter);
 	}
 
 	/**
@@ -83,7 +95,19 @@ public class CoverabilityGraph {
 	 * @return A coverability graph.
 	 */
 	static public CoverabilityGraph getReachabilityGraph(PetriNet pn) {
-		return get(pn, true);
+		return get(pn, true, null);
+	}
+
+	/**
+	 * Construct the reachability graph for a given Petri net. If a reachability graph for this Petri net is already
+	 * known, that instance is re-used instead of creating a new one. Keep in mind that the reachability graph of a
+	 * Petri net can be infinite!
+	 * @param pn The Petri net whose coverability graph is wanted.
+	 * @param interrupter callback for module interruptions
+	 * @return A coverability graph.
+	 */
+	static public CoverabilityGraph getReachabilityGraph(PetriNet pn, ModuleInterrupter interrupter) {
+		return get(pn, true, interrupter);
 	}
 
 	/**
@@ -91,9 +115,10 @@ public class CoverabilityGraph {
 	 * known, that instance is re-used instead of creating a new one.
 	 * @param pn The Petri net whose coverability graph is wanted.
 	 * @param reachabilityGraph Should just reachability be checked and coverability be ignored?
+	 * @param interrupter callback for module interruptions
 	 * @return A coverability graph.
 	 */
-	static private CoverabilityGraph get(PetriNet pn, boolean reachabilityGraph) {
+	static private CoverabilityGraph get(PetriNet pn, boolean reachabilityGraph, ModuleInterrupter interrupter) {
 		String key = CoverabilityGraph.class.getName();
 		if (reachabilityGraph)
 			key = key + "-reachability";
@@ -108,7 +133,7 @@ public class CoverabilityGraph {
 		if (extension != null && extension instanceof CoverabilityGraph)
 			return (CoverabilityGraph) extension;
 
-		CoverabilityGraph result = new CoverabilityGraph(pn, reachabilityGraph);
+		CoverabilityGraph result = new CoverabilityGraph(pn, reachabilityGraph, interrupter);
 		// Save this coverability graph as an extension, but make sure that it is removed if the structure of
 		// the Petri net is changed in any way.
 		pn.putExtension(key, result, ExtensionProperty.NOCOPY);
@@ -122,10 +147,12 @@ public class CoverabilityGraph {
 	 * {@link #calculateNodes() calculateNodes} method.
 	 * @param pn The Petri net whose coverability graph is wanted.
 	 * @param reachabilityGraph Should just reachability be checked and coverability be ignored?
+	 * @param interrupter callback for module interruptions
 	 */
-	private CoverabilityGraph(PetriNet pn, boolean reachabilityGraph) {
+	private CoverabilityGraph(PetriNet pn, boolean reachabilityGraph, ModuleInterrupter interrupter) {
 		this.pn = pn;
 		this.reachabilityGraph = reachabilityGraph;
+		this.interrupter = interrupter;
 		getNode(null, pn.getInitialMarking(), null, null);
 	}
 
@@ -135,6 +162,9 @@ public class CoverabilityGraph {
 	 */
 	public int calculateNodes() {
 		while (true) {
+			if (interrupter != null) {
+				interrupter.throwIfInterruptRequested();
+			}
 			if (!visitNode())
 				return nodes.size();
 		}
@@ -326,6 +356,9 @@ public class CoverabilityGraph {
 		lts.putExtension(PetriNet.class.getName(), this.pn);
 
 		for (CoverabilityGraphNode node : this.getNodes()) {
+			if (interrupter != null) {
+				interrupter.throwIfInterruptRequested();
+			}
 			Marking mark = node.getMarking();
 			assert ltsStates.get(mark) == null;
 
@@ -342,6 +375,9 @@ public class CoverabilityGraph {
 		for (CoverabilityGraphNode sourceNode : this.getNodes()) {
 			State source = ltsStates.get(sourceNode.getMarking());
 			for (CoverabilityGraphEdge edge : sourceNode.getPostsetEdges()) {
+				if (interrupter != null) {
+					interrupter.throwIfInterruptRequested();
+				}
 				State target = ltsStates.get(edge.getTarget().getMarking());
 				Transition transition = edge.getTransition();
 				try {
