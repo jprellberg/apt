@@ -61,9 +61,9 @@ import uniol.apt.analysis.sideconditions.Pure;
 import uniol.apt.analysis.synthesize.separation.Separation;
 import uniol.apt.analysis.synthesize.separation.SeparationUtility;
 import uniol.apt.util.DifferentPairsIterable;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.EquivalenceRelation;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Synthesize a Petri Net from a transition system.

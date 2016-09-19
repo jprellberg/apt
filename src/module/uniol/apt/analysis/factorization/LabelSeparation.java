@@ -26,7 +26,7 @@ import java.util.Set;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.analysis.connectivity.Connectivity;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Provides methods to check if a given LTS is T'-separated for some label set

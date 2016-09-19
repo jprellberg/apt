@@ -7,6 +7,7 @@
 	</path>
 
 	<path id="glue.class.path">
+		<pathelement location="classes/lib" />
 		<pathelement location="classes/glue" />
 	</path>
 
@@ -161,7 +162,7 @@
 		</copy>
 	</target>
 
-	<target name="javac.glue">
+	<target name="javac.glue" depends="javac.lib">
 		<javac-part name="glue" />
 	</target>
 

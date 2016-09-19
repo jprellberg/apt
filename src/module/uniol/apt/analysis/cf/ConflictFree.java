@@ -23,7 +23,7 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.analysis.exception.PreconditionFailedException;
 import uniol.apt.analysis.plain.Plain;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * This module tests if a plain Petri net is conflict-free. That is:

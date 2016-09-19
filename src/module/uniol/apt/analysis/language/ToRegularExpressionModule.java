@@ -40,7 +40,7 @@ import uniol.apt.module.ModuleInputSpec;
 import uniol.apt.module.ModuleOutput;
 import uniol.apt.module.ModuleOutputSpec;
 import uniol.apt.module.exception.ModuleException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Convert a Petri net or LTS into a language-equivalent regular expression

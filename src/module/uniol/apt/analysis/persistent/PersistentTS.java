@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Checks whether an LTS for persistance. The system is persistent, if it satisfies the "small diamond property".

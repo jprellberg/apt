@@ -30,8 +30,8 @@ import java.util.Stack;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * This class offers the possibility to compute the smallest cycles and parikh vectors of a transitionsystem with a

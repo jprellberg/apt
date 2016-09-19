@@ -32,8 +32,8 @@ import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.ParikhVector;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Compute smallest cycles or cycles which do not contain any state twice via Johnson's algorithm.

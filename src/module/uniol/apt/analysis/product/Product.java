@@ -27,8 +27,8 @@ import java.util.Queue;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Provides methods to compute the synchronous or asynchronous product of two

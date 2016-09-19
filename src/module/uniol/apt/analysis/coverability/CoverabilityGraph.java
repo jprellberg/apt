@@ -38,11 +38,10 @@ import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.util.Pair;
-
+import uniol.apt.util.interrupt.InterrupterRegistry;
 import uniol.apt.adt.exception.ArcExistsException;
 import uniol.apt.adt.exception.StructureException;
 import uniol.apt.analysis.exception.UnboundedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 
 /**
  * This class represents a coverability graph of a Petri net. Let's first define the reachability graph: The reachable

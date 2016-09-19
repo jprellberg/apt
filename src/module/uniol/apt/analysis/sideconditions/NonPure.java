@@ -20,7 +20,7 @@
 package uniol.apt.analysis.sideconditions;
 
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Checks if the Petri net is nonpure and has simple side conditions (and no

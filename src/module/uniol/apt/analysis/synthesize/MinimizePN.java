@@ -39,9 +39,9 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.analysis.synthesize.separation.SMTInterpolHelper;
 import uniol.apt.analysis.synthesize.separation.SeparationUtility;
-import uniol.apt.module.exception.ModuleInterruptedException;
 import uniol.apt.util.DifferentPairsIterable;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.UncheckedInterruptedException;
 
 import static uniol.apt.util.DebugUtil.debug;
 import static uniol.apt.util.DebugUtil.debugFormat;
@@ -229,7 +229,7 @@ public class MinimizePN {
 		// Is there a model?
 		LBool isSat = script.checkSat();
 		if (isSat == LBool.UNKNOWN) {
-			throw new ModuleInterruptedException();
+			throw new UncheckedInterruptedException();
 		} else if (isSat == LBool.UNSAT) {
 			return null;
 		}

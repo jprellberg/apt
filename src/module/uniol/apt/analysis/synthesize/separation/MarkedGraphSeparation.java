@@ -37,7 +37,7 @@ import uniol.apt.analysis.synthesize.PNProperties;
 import uniol.apt.analysis.synthesize.Region;
 import uniol.apt.analysis.synthesize.RegionUtility;
 import uniol.apt.analysis.synthesize.UnreachableException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * This class quickly finds solutions to separation problems for TS satisfying some properties. A marked graph is a

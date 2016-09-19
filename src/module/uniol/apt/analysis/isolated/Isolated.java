@@ -21,7 +21,7 @@ package uniol.apt.analysis.isolated;
 
 import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Checks if there are any isolated elements in the Petri net.

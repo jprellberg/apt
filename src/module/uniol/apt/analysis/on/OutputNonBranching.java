@@ -21,7 +21,7 @@ package uniol.apt.analysis.on;
 
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * This module tests if a Petri net is output-nonbranching. That is:

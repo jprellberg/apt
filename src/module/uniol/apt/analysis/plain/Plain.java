@@ -21,7 +21,7 @@ package uniol.apt.analysis.plain;
 
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Check if PN is plain

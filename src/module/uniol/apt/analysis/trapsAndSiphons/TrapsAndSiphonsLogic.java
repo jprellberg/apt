@@ -38,7 +38,7 @@ import org.sat4j.tools.OptToSatAdapter;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Computes either all minimal traps or all minimal siphons in a Petri net pn by

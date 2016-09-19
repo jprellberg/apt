@@ -32,7 +32,7 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.analysis.synthesize.PNProperties;
 import uniol.apt.analysis.synthesize.Region;
 import uniol.apt.analysis.synthesize.RegionUtility;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 import static uniol.apt.util.DebugUtil.debug;
 import static uniol.apt.util.DebugUtil.debugFormat;

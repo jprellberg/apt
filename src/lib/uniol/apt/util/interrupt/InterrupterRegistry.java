@@ -17,10 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.apt.module.interrupt;
-
-import uniol.apt.module.Interrupter;
-import uniol.apt.module.exception.ModuleInterruptedException;
+package uniol.apt.util.interrupt;
 
 /**
  * Handles {@link Interrupter} implementations for different threads.
@@ -67,12 +64,12 @@ public class InterrupterRegistry {
 	 * Throws an exception if the interrupter for the currently executing
 	 * (calling) thread determines that a task should be aborted.
 	 *
-	 * @throws ModuleInterruptedException
+	 * @throws UncheckedInterruptedException
 	 *                 on interruption
 	 */
-	public static void throwIfInterruptRequestedForCurrentThread() throws ModuleInterruptedException {
+	public static void throwIfInterruptRequestedForCurrentThread() throws UncheckedInterruptedException {
 		if (getCurrentThreadInterrupter().isInterruptRequested()) {
-			throw new ModuleInterruptedException();
+			throw new UncheckedInterruptedException();
 		}
 	}
 

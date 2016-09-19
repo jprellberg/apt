@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 import static uniol.apt.util.DebugUtil.debug;
 import static uniol.apt.util.DebugUtil.debugFormat;

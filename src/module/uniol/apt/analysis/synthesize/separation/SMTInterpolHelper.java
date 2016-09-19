@@ -41,9 +41,9 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.analysis.synthesize.PNProperties;
 import uniol.apt.analysis.synthesize.RegionUtility;
 import uniol.apt.analysis.synthesize.UnreachableException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.DifferentPairsIterable;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Helper class for solving separation problems.

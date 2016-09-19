@@ -35,7 +35,7 @@ import uniol.apt.module.ModuleInputSpec;
 import uniol.apt.module.ModuleOutput;
 import uniol.apt.module.ModuleOutputSpec;
 import uniol.apt.module.exception.ModuleException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Try to fire a given sequence in a Petri net.

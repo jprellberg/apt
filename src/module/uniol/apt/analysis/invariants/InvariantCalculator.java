@@ -29,9 +29,9 @@ import java.util.Set;
 
 import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.MathTools;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * A calculator for invariants and testing if a net is covered by invariants.

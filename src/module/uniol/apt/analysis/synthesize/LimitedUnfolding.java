@@ -30,7 +30,7 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.analysis.deterministic.Deterministic;
 import uniol.apt.analysis.exception.NonDeterministicException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Calculate a limited unfolding of a transition system, as defined in definition 2.42 in "Petri Net Synthesis" by

@@ -28,7 +28,7 @@ import java.util.Set;
 import uniol.apt.adt.pn.Marking;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Transition;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Check if a given word is in the prefix language of a given Petri net. Each transition has a label. The set of labels

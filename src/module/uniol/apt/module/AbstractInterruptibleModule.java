@@ -20,8 +20,9 @@
 package uniol.apt.module;
 
 import uniol.apt.module.exception.ModuleException;
-import uniol.apt.module.exception.ModuleInterruptedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.Interrupter;
+import uniol.apt.util.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.UncheckedInterruptedException;
 
 /**
  * Abstract implementation of the {@link InterruptibleModule} interface.
@@ -55,7 +56,7 @@ public abstract class AbstractInterruptibleModule implements InterruptibleModule
 
 	@Override
 	public void run(ModuleInput input, ModuleOutput output, Interrupter interrupter)
-			throws ModuleException, ModuleInterruptedException {
+			throws ModuleException, UncheckedInterruptedException {
 		try {
 			InterrupterRegistry.setCurrentThreadInterrupter(interrupter);
 			run(input, output);

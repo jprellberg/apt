@@ -27,7 +27,7 @@ import uniol.apt.adt.pn.Transition;
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.analysis.exception.UnboundedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 import uniol.apt.analysis.coverability.CoverabilityGraph;
 
 /**

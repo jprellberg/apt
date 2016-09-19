@@ -39,10 +39,10 @@ import org.apache.commons.collections4.Predicate;
 
 import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.TransitionSystem;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.EquivalenceRelation;
 import uniol.apt.util.IEquivalenceRelation;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Utility functions for constructing and working with {@link FiniteAutomaton} instances.

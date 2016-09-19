@@ -17,9 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.apt.module.interrupt;
-
-import uniol.apt.module.Interrupter;
+package uniol.apt.util.interrupt;
 
 /**
  * Interrupter that never interrupts modules.

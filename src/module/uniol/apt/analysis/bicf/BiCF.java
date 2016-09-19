@@ -24,7 +24,7 @@ import uniol.apt.adt.pn.Marking;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 import uniol.apt.analysis.bcf.BCF;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Tests if a Petri net is binary-conflict-free. A Petri Net is BiCF if

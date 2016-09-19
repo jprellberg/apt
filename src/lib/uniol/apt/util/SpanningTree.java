@@ -35,7 +35,7 @@ import uniol.apt.adt.INode;
 import uniol.apt.adt.StructuralExtensionRemover;
 import uniol.apt.adt.exception.StructureException;
 import uniol.apt.adt.extension.ExtensionProperty;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Calculate a spanning tree of a graph based on a breadth-first search.

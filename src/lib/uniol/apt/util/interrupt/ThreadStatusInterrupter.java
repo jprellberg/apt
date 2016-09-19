@@ -17,18 +17,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.apt.module.exception;
+package uniol.apt.util.interrupt;
 
 /**
- * Runtime exception that gets thrown by modules and/or their implementation
- * classes in response to an interruption request.
+ * Interrupter that checks {@link Thread#isInterrupted()} to determine if a
+ * module should be interrupted.
  *
  * @author Jonas Prellberg
  *
  */
-public class ModuleInterruptedException extends RuntimeException {
+public class ThreadStatusInterrupter implements Interrupter {
 
-	private static final long serialVersionUID = 3589054734574902422L;
+	@Override
+	public boolean isInterruptRequested() {
+		return Thread.currentThread().isInterrupted();
+	}
 
 }
 

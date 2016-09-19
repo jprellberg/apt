@@ -22,8 +22,8 @@ package uniol.apt.analysis.homogeneous;
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Checks whether a given plain Petri net is an homogeneous net.

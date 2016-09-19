@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 import static uniol.apt.adt.automaton.FiniteAutomatonUtility.minimize;
 import static uniol.apt.adt.automaton.FiniteAutomatonUtility.statesIterable;

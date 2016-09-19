@@ -17,23 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.apt.module.interrupt;
-
-import uniol.apt.module.Interrupter;
+package uniol.apt.util.interrupt;
 
 /**
- * Interrupter that checks {@link Thread#isInterrupted()} to determine if a
- * module should be interrupted.
+ * Interface for callbacks that can be supplied to modules before execution.
+ * Modules will periodically use its method to check if they should continue
+ * running or abort with an {@link InterruptedException}.
  *
  * @author Jonas Prellberg
  *
  */
-public class ThreadStatusInterrupter implements Interrupter {
+public interface Interrupter {
 
-	@Override
-	public boolean isInterruptRequested() {
-		return Thread.currentThread().isInterrupted();
-	}
+	/**
+	 * Determines if a task should be aborted.
+	 *
+	 * @return true if a task shoul be aborted
+	 */
+	boolean isInterruptRequested();
 
 }
 

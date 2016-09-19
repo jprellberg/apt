@@ -36,8 +36,8 @@ import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.analysis.coverability.CoverabilityGraph;
 import uniol.apt.analysis.exception.UnboundedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.Pair;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Check if two nets are isomorphic by checking if the two reachability graphs are equal.

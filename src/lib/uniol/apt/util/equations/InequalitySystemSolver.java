@@ -41,9 +41,9 @@ import de.uni_freiburg.informatik.ultimate.logic.Sort;
 import de.uni_freiburg.informatik.ultimate.logic.Term;
 import de.uni_freiburg.informatik.ultimate.smtinterpol.smtlib2.SMTInterpol;
 import de.uni_freiburg.informatik.ultimate.smtinterpol.smtlib2.TerminationRequest;
-import uniol.apt.module.exception.ModuleInterruptedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.equations.InequalitySystem.Inequality;
+import uniol.apt.util.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.UncheckedInterruptedException;
 
 import static uniol.apt.util.DebugUtil.debug;
 
@@ -223,7 +223,7 @@ public class InequalitySystemSolver {
 			// This will happen if the TerminationRequest given to the
 			// Script constructor triggers
 			// TODO maybe introduce a different exception?
-			throw new ModuleInterruptedException();
+			throw new UncheckedInterruptedException();
 		} else if (isSat == LBool.UNSAT) {
 			debug("SMTInterpol produced unsat: ", isSat);
 			return Collections.emptyList();

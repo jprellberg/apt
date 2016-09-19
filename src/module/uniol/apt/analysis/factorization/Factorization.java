@@ -27,8 +27,8 @@ import uniol.apt.adt.ts.Arc;
 import uniol.apt.adt.ts.State;
 import uniol.apt.adt.ts.TransitionSystem;
 import uniol.apt.analysis.connectivity.Connectivity;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.PowerSet;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * A class to test if a LTS is a product. It allows to compute the factors as

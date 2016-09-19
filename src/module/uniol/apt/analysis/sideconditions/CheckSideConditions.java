@@ -22,7 +22,7 @@ package uniol.apt.analysis.sideconditions;
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Checks a net for side conditions and returns a list of the side conditions.

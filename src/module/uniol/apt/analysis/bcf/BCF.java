@@ -33,7 +33,7 @@ import uniol.apt.analysis.coverability.CoverabilityGraph;
 import uniol.apt.analysis.coverability.CoverabilityGraphEdge;
 import uniol.apt.analysis.coverability.CoverabilityGraphNode;
 import uniol.apt.analysis.exception.UnboundedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Tests if a Petri net is behaviourally conflict-free. A Petri Net is BCF if

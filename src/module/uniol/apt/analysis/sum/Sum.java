@@ -27,7 +27,7 @@ import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Provides methods to compute the synchronous or asynchronous sum of two PN.

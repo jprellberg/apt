@@ -30,7 +30,7 @@ import java.util.Set;
 
 import uniol.apt.adt.IGraph;
 import uniol.apt.adt.INode;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Examine a graph's connectivity

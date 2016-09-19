@@ -26,7 +26,7 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Transition;
 import uniol.apt.analysis.exception.PreconditionFailedException;
 import uniol.apt.analysis.plain.Plain;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * Checks whether a given plain Petri net is a free choice net. That is:

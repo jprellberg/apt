@@ -20,7 +20,8 @@
 package uniol.apt.module;
 
 import uniol.apt.module.exception.ModuleException;
-import uniol.apt.module.exception.ModuleInterruptedException;
+import uniol.apt.util.interrupt.Interrupter;
+import uniol.apt.util.interrupt.UncheckedInterruptedException;
 
 /**
  * Interface for modules that are interruptible.
@@ -60,12 +61,12 @@ public interface InterruptibleModule extends Module {
 	 * @throws ModuleException
 	 *                 On various kinds of errors that prevent the module
 	 *                 from working.
-	 * @throws ModuleInterruptedException
+	 * @throws UncheckedInterruptedException
 	 *                 thrown when the module is interrupted before
 	 *                 completion
 	 */
 	public void run(ModuleInput input, ModuleOutput output, Interrupter interrupter)
-			throws ModuleException, ModuleInterruptedException;
+			throws ModuleException, UncheckedInterruptedException;
 
 }
 

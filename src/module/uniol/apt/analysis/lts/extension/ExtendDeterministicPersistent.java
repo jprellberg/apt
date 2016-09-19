@@ -37,11 +37,12 @@ import uniol.apt.analysis.deterministic.Deterministic;
 import uniol.apt.analysis.exception.MustLeadToSameStateException;
 import uniol.apt.analysis.exception.NoFiniteExtensionPossibleException;
 import uniol.apt.analysis.exception.NonDeterministicException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.DifferentPairsIterable;
 import uniol.apt.util.EquivalenceRelation;
 import uniol.apt.util.Pair;
 import uniol.apt.util.SpanningTree;
+import uniol.apt.util.interrupt.InterrupterRegistry;
+
 import static uniol.apt.util.DebugUtil.debugFormat;
 
 /**

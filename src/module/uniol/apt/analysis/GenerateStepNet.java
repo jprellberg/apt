@@ -36,7 +36,7 @@ import uniol.apt.adt.pn.Token;
 import uniol.apt.adt.pn.Transition;
 import uniol.apt.analysis.coverability.CoverabilityGraph;
 import uniol.apt.analysis.coverability.CoverabilityGraphNode;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 import uniol.apt.analysis.coverability.CoverabilityGraphEdge;
 
 import static uniol.apt.util.PowerSet.powerSet;

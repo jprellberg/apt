@@ -37,7 +37,7 @@ import uniol.apt.analysis.coverability.CoverabilityGraph;
 import uniol.apt.analysis.coverability.CoverabilityGraphEdge;
 import uniol.apt.analysis.coverability.CoverabilityGraphNode;
 import uniol.apt.analysis.exception.UnboundedException;
-import uniol.apt.module.interrupt.InterrupterRegistry;
+import uniol.apt.util.interrupt.InterrupterRegistry;
 
 /**
  * This class implements various liveness tests for Petri nets.

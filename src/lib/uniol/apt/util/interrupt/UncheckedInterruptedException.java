@@ -17,24 +17,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package uniol.apt.module;
+package uniol.apt.util.interrupt;
 
 /**
- * Interface for callbacks that can be supplied to modules before execution.
- * Modules will periodically use its method to check if they should continue
- * running or abort with an {@link InterruptedException}.
+ * Runtime exception that gets thrown by modules and/or their implementation
+ * classes in response to an interruption request.
  *
  * @author Jonas Prellberg
  *
  */
-public interface Interrupter {
+public class UncheckedInterruptedException extends RuntimeException {
 
-	/**
-	 * Determines if a task should be aborted.
-	 *
-	 * @return true if a task shoul be aborted
-	 */
-	boolean isInterruptRequested();
+	private static final long serialVersionUID = 3589054734574902422L;
 
 }
 
