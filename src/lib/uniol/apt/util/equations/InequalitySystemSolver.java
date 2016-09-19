@@ -40,7 +40,9 @@ import de.uni_freiburg.informatik.ultimate.logic.Script;
 import de.uni_freiburg.informatik.ultimate.logic.Sort;
 import de.uni_freiburg.informatik.ultimate.logic.Term;
 import de.uni_freiburg.informatik.ultimate.smtinterpol.smtlib2.SMTInterpol;
-
+import de.uni_freiburg.informatik.ultimate.smtinterpol.smtlib2.TerminationRequest;
+import uniol.apt.module.exception.ModuleInterruptedException;
+import uniol.apt.module.interrupt.InterrupterRegistry;
 import uniol.apt.util.equations.InequalitySystem.Inequality;
 
 import static uniol.apt.util.DebugUtil.debug;
@@ -71,7 +73,12 @@ public class InequalitySystemSolver {
 	public InequalitySystemSolver() {
 		// Java lazily initializes classes, so the helper will only be created on first use
 		Logger logger = Log4JInitializationHelper.INSTANCE.logger;
-		script = new SMTInterpol(logger, false);
+		script = new SMTInterpol(logger, new TerminationRequest() {
+			@Override
+			public boolean isTerminationRequested() {
+				return InterrupterRegistry.getCurrentThreadInterrupter().isInterruptRequested();
+			}
+		});
 		script.setLogic(Logics.QF_LIA);
 		systemsLengthStack.addLast(0);
 		variablesStack.addLast(0);
@@ -212,9 +219,13 @@ public class InequalitySystemSolver {
 
 	static private List<BigInteger> handleSolution(Script script, int numVariables) {
 		LBool isSat = script.checkSat();
-		if (isSat != LBool.SAT) {
+		if (isSat == LBool.UNKNOWN) {
+			// This will happen if the TerminationRequest given to the
+			// Script constructor triggers
+			// TODO maybe introduce a different exception?
+			throw new ModuleInterruptedException();
+		} else if (isSat == LBool.UNSAT) {
 			debug("SMTInterpol produced unsat: ", isSat);
-			assert isSat == LBool.UNSAT : isSat;
 			return Collections.emptyList();
 		}
 
